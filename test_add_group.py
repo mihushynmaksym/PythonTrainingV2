@@ -5,10 +5,10 @@ import unittest
 
 class UntitledTestCase(unittest.TestCase):
     def setUp(self):
-        self.driver = webdriver.Firefox()
+        self.wd = webdriver.Firefox()
 
     def test_untitled_test_case(self):
-        wd = self.driver
+        wd = self.wd
         wd.get("http://localhost:8080/addressbook/index.php")
         wd.find_element_by_name("user").send_keys("admin")
         wd.find_element_by_name("pass").send_keys("secret")
@@ -23,7 +23,7 @@ class UntitledTestCase(unittest.TestCase):
         wd.find_element_by_link_text("Logout").click()
 
     def tearDown(self):
-        self.driver.quit()
+        self.wd.quit()
 
 
 if __name__ == "__main__":
