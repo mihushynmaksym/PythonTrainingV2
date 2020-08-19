@@ -13,6 +13,12 @@ class UntitledTestCase(unittest.TestCase):
         self.create_new_group(wd, Group(name='param1', header='param2', footer='param3'))
         self.logout(wd)
 
+    def test_create_group_with_empty_param(self):
+        wd = self.wd
+        self.login(wd, login='admin', password='secret')
+        self.create_new_group(wd, Group(name='', header='', footer=''))
+        self.logout(wd)
+
     def logout(self, wd):
         wd.find_element_by_link_text("Logout").click()
 
