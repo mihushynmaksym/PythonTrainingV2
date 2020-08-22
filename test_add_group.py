@@ -1,6 +1,5 @@
 from selenium import webdriver
 from group import Group
-from contact import Contact
 import unittest
 
 
