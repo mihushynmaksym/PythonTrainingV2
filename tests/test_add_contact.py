@@ -1,13 +1,5 @@
-from fixture.application import Application
 from model.contact import Contact
-import pytest
-
-
-@pytest.fixture
-def app(request):
-    fixture = Application()
-    request.addfinalizer(fixture.destroy)
-    return fixture
+import time
 
 
 def test_create_new_contact(app):
@@ -33,3 +25,4 @@ def test_create_new_contact(app):
                                phone2='phone2',
                                notes='notes'))
     app.session.logout()
+    time.sleep(1)
