@@ -1,5 +1,4 @@
 from model.contact import Contact
-import time
 
 
 def test_modify_contact(app):
@@ -25,4 +24,3 @@ def test_modify_contact(app):
                                phone2='modify_phone2',
                                notes='modify_notes'))
     app.session.logout()
-    time.sleep(1)

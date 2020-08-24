@@ -77,4 +77,3 @@ class ContactHelper:
         wd.find_element_by_xpath("//*[@name='selected[]']").click()
         wd.find_element_by_xpath("//*[@value='Delete']").click()
         wd.switch_to.alert.accept()
-
