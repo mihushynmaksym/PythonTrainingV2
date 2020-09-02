@@ -2,7 +2,6 @@ from model.contact import Contact
 
 
 def test_modify_contact(app):
-    app.session.login(login='admin', password='secret')
     app.contact.modify(Contact(firstname='modify_name',
                                middlename='modify_midlename',
                                lastname='modify_lastname',
@@ -23,4 +22,3 @@ def test_modify_contact(app):
                                adress2='modify_adress2',
                                phone2='modify_phone2',
                                notes='modify_notes'))
-    app.session.logout()
