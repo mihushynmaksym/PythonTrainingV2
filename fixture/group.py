@@ -36,3 +36,8 @@ class GroupHelper:
         wd.find_element_by_xpath("//*[@name='selected[]']").click()
         wd.find_element_by_xpath("//*[@value='Delete group(s)']").click()
         self.return_to_home_page(wd)
+
+    def count(self):
+        wd = self.app.wd
+        wd.find_element_by_link_text("groups").click()
+        return len(wd.find_elements_by_xpath("//*[@name='selected[]']"))

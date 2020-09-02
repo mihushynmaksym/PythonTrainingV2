@@ -45,6 +45,7 @@ class ContactHelper:
     def modify(self, contact):
         wd = self.app.wd
         # modify form contact
+        self.return_to_home_page(wd)
         wd.find_element_by_xpath("//*[@alt='Edit']").click()
         self.fill_contact_form(contact, wd)
         wd.find_element_by_xpath("//*[@value='Update']").click()
@@ -57,3 +58,8 @@ class ContactHelper:
         wd.find_element_by_xpath("//*[@value='Delete']").click()
         wd.switch_to.alert.accept()
         self.return_to_home_page(wd)
+
+    def count(self):
+        wd = self.app.wd
+        self.return_to_home_page(wd)
+        return len(wd.find_elements_by_xpath("//*[@name='selected[]']"))

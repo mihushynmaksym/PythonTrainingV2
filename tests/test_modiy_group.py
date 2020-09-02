@@ -2,4 +2,6 @@ from model.group import Group
 
 
 def test_modify_first_group(app):
+    if app.group.count() == 0:
+        app.group.create(Group(name='param1', header='param2', footer='param3'))  # precondition rule for test
     app.group.modify(Group(name='param1', header='param2', footer='param3'))
