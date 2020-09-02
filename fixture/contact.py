@@ -3,6 +3,9 @@ class ContactHelper:
         self.app = app
 
     def return_to_home_page(self, wd):
+        if len(wd.find_elements_by_xpath("//*[@value='Send e-Mail']")) > 0 \
+                and (wd.current_url.endswith("/index.php")):
+            return
         wd.find_element_by_link_text("home").click()
 
     def fill_contact_form(self, contact, wd):
