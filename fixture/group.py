@@ -4,6 +4,8 @@ class GroupHelper:
     def __init__(self, app):
         self.app = app
 
+    group_cache = None  # option Cash = None
+
     def return_to_home_page(self, wd):
         if not len(wd.find_elements_by_xpath("//*[@value='Send e-Mail']")) > 0 \
                 and (wd.current_url.endswith("/index.php")):
@@ -33,6 +35,7 @@ class GroupHelper:
         self.fill_group(group, wd)
         wd.find_element_by_name("submit").click()
         self.return_to_home_page(wd)
+        self.group_cache = None # option Cash = None
 
     def modify(self, group):
         # fill group form
@@ -43,6 +46,7 @@ class GroupHelper:
         self.fill_group(group, wd)
         wd.find_element_by_xpath("//*[@name='update']").click()
         self.return_to_home_page(wd)
+        self.group_cache = None  # option Cash = None
 
     def delete(self):
         # take first group value and delete
@@ -51,6 +55,7 @@ class GroupHelper:
         wd.find_element_by_xpath("//*[@name='selected[]']").click()
         wd.find_element_by_xpath("//*[@value='Delete group(s)']").click()
         self.return_to_home_page(wd)
+        self.group_cache = None  # option Cash = None
 
     def count(self):
         wd = self.app.wd
@@ -58,11 +63,12 @@ class GroupHelper:
         return len(wd.find_elements_by_xpath("//*[@name='selected[]']"))
 
     def get_group_list(self):
-        wd = self.app.wd
-        self.groups_page(wd)
-        list_groups = []
-        for element in wd.find_elements_by_css_selector("span.group"):
-            text = element.text
-            id = element.find_element_by_name("selected[]").get_attribute("value")
-            list_groups.append(Group(name=text, id=id))
-        return list_groups
+        if self.group_cache is None:
+            wd = self.app.wd
+            self.groups_page(wd)
+            self.group_cache = []
+            for element in wd.find_elements_by_css_selector("span.group"):
+                text = element.text
+                id = element.find_element_by_name("selected[]").get_attribute("value")
+                self.group_cache.append(Group(name=text, id=id))
+        return list(self.group_cache)
