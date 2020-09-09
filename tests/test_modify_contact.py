@@ -1,4 +1,5 @@
 from model.contact import Contact
+from random import randrange
 
 
 def test_modify_contact(app):
@@ -25,9 +26,10 @@ def test_modify_contact(app):
     if app.contact.count() == 0:  # precondition rule for test
         app.contact.create(contact_value)
     old_contact = app.contact.get_contact_list()
-    contact_value.id = old_contact[0].id
-    app.contact.modify(contact_value)
+    index = randrange(len(old_contact))
+    contact_value.id = old_contact[index].id
+    app.contact.modify_by_index(index, contact_value)
     new_contact = app.contact.get_contact_list()
     assert len(old_contact) == len(new_contact)
-    old_contact[0] = contact_value
+    old_contact[index] = contact_value
     assert sorted(old_contact, key=Contact.id_or_max) == sorted(new_contact, key=Contact.id_or_max)

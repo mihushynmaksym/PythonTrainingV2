@@ -70,26 +70,40 @@ class ContactHelper:
         self.return_to_home_page(wd)
         self.contact_cache = None
 
-    def modify(self, contact):
+    def modify_by_index(self, index, contact):
         wd = self.app.wd
         # modify form contact
         self.return_to_home_page(wd)
-        wd.find_element_by_xpath("//*[@alt='Edit']").click()
+        self.select_contact_for_edit_by_index(index)
         self.fill_contact_form(contact, wd)
         wd.find_element_by_xpath("//*[@value='Update']").click()
         self.return_to_home_page(wd)
         self.contact_cache = None
 
-    def delete(self):
+    def delete_contact_by_index(self, index):
         # delete first value contact
         wd = self.app.wd
         self.return_to_home_page(wd)
-        wd.find_element_by_xpath("//*[@name='selected[]']").click()
+        self.select_contact_for_delete_by_index(index)
         wd.find_element_by_xpath("//*[@value='Delete']").click()
         wd.switch_to.alert.accept()  # work with pop-up option
         wd.find_element_by_css_selector("div.msgbox")  # waiter for delete option
         self.return_to_home_page(wd)
         self.contact_cache = None
+
+    def select_first_contact_for_edit_by_index(self):
+        self.select_contact_for_edit_by_index(0)
+
+    def select_contact_for_edit_by_index(self, index):
+        wd = self.app.wd
+        wd.find_elements_by_xpath("//*[@alt='Edit']")[index].click()
+
+    def select_contact_for_delete_by_index(self, index):
+        wd = self.app.wd
+        wd.find_elements_by_xpath("//*[@name='selected[]']")[index].click()
+
+    def select_first_contact_for_delete_by_index(self):
+        self.select_contact_for_delete_by_index(0)
 
     def count(self):
         wd = self.app.wd
