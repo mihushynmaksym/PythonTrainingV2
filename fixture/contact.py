@@ -1,3 +1,4 @@
+import re
 from model.contact import Contact
 
 
@@ -84,7 +85,7 @@ class ContactHelper:
         # delete first value contact
         wd = self.app.wd
         self.return_to_home_page(wd)
-        self.select_contact_for_delete_by_index(index)
+        self.select_contact_by_index(index)
         wd.find_element_by_xpath("//*[@value='Delete']").click()
         wd.switch_to.alert.accept()  # work with pop-up option
         wd.find_element_by_css_selector("div.msgbox")  # waiter for delete option
@@ -98,12 +99,12 @@ class ContactHelper:
         wd = self.app.wd
         wd.find_elements_by_xpath("//*[@alt='Edit']")[index].click()
 
-    def select_contact_for_delete_by_index(self, index):
+    def select_contact_by_index(self, index):
         wd = self.app.wd
         wd.find_elements_by_xpath("//*[@name='selected[]']")[index].click()
 
     def select_first_contact_for_delete_by_index(self):
-        self.select_contact_for_delete_by_index(0)
+        self.select_contact_by_index(0)
 
     def count(self):
         wd = self.app.wd
@@ -119,6 +120,46 @@ class ContactHelper:
                 param = element.find_elements_by_tag_name("td")
                 lastname = param[1].text  # take lastname text value
                 firstname = param[2].text  # take firstname text value
-                id = element.find_element_by_name("selected[]").get_attribute("value")
-                self.contact_cache.append(Contact(lastname=lastname, firstname=firstname, id=id))
+                adress = param[3].text
+                all_emails = param[4].text
+                all_phones = param[5].text
+                id = param[0].find_element_by_name("selected[]").get_attribute("value")
+                self.contact_cache.append(Contact(lastname=lastname, firstname=firstname, id=id, address=adress,
+                                                  all_emails_from_home_page=all_emails,
+                                                  all_phones_from_home_page=all_phones))
         return list(self.contact_cache)
+
+    def get_contact_info_from_edit_page(self, index):
+        wd = self.app.wd
+        self.return_to_home_page(wd)
+        self.select_contact_for_edit_by_index(index)
+        id = wd.find_element_by_name("id").get_attribute("value")
+        firstname = wd.find_element_by_name('firstname').get_attribute("value")
+        lastname = wd.find_element_by_name('lastname').get_attribute("value")
+        address = wd.find_element_by_name('address').text
+        email1 = wd.find_element_by_name('email').get_attribute("value")
+        email2 = wd.find_element_by_name('email2').get_attribute("value")
+        email3 = wd.find_element_by_name('email3').get_attribute("value")
+        home_phone = wd.find_element_by_name('home').get_attribute("value")
+        mobile_phone = wd.find_element_by_name('mobile').get_attribute("value")
+        work_phone = wd.find_element_by_name('work').get_attribute("value")
+        secondary_phone = wd.find_element_by_name('phone2').get_attribute("value")
+        id = id
+        return Contact(firstname=firstname, lastname=lastname, address=address, email=email1, email2=email2,
+                       email3=email3, home=home_phone, mobile=mobile_phone, work=work_phone, phone2=secondary_phone,
+                       id=id)
+
+    def clear_signs(self, s):
+        return re.sub("[() -,?!@#$%:;'\"]", "", s)
+
+    def merge_phones_like_on_home_page(self, contact):
+        return "\n".join(filter(lambda x: x != "",
+                                map(lambda x: self.clear_signs(x),
+                                    filter(lambda x: x is not None,
+                                           [contact.home, contact.mobile, contact.work, contact.phone2]))))
+
+    def merge_email_like_on_home_page(self, contact):
+        return "\n".join(filter(lambda x: x != "",
+                                map(lambda x: self.clear_signs(x),
+                                    filter(lambda x: x is not None,
+                                           [contact.email, contact.email2, contact.email3]))))
