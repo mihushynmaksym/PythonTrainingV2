@@ -1,11 +1,12 @@
 
+
 class SessionHelper:
     def __init__(self, app):
         self.app = app
 
     def login(self, login, password):
         wd = self.app.wd
-        wd.get("http://localhost:8080/addressbook/index.php")
+        self.app.open_home_page()
         wd.find_element_by_name("user").send_keys(login)
         wd.find_element_by_name("pass").send_keys(password)
         wd.find_element_by_xpath("//input[@value='Login']").click()
