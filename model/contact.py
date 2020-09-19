@@ -33,7 +33,10 @@ class Contact:
         self.all_phones_from_home_page = all_phones_from_home_page
 
     def __repr__(self):
-        return "{0}:{1}:{2}".format(self.id, self.firstname, self.lastname)
+        return "{0}:{1}:{2}:{3}:{4}:{5}:{6}:{7}:{8}:{9}:{10}:{11}:{12}:{13}:{14}:{15}:{16}:{17}:{18}:{19}:{20}" \
+            .format(self.id, self.firstname, self.lastname, self.middlename, self.nickname, self.title, self.company,
+                    self.address, self.home, self.mobile, self.work, self.fax, self.email, self.email2, self.email3,
+                    self.homepage, self.byear, self.ayear, self.adress2, self.phone2, self.notes)
 
     def __eq__(self, other):
         return (self.id is None or other.id is None or self.id == other.id) and self.firstname == other.firstname \
