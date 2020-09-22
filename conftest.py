@@ -1,22 +1,23 @@
 import pytest
+import json
 from fixture.application import Application
 
 fixture = None
+target = None
 
 
 @pytest.fixture  # init fixture one time
 def app(request):
     global fixture
+    global target
     browser = request.config.getoption("--browser")
-    base_url = request.config.getoption("--baseUrl")
-    login = request.config.getoption("--login")
-    password = request.config.getoption("--password")
-    if fixture is None:
-        fixture = Application(browser=browser, base_url=base_url, login=login, password=password)
-    else:
-        if not fixture.is_valid():  # check rule if web driver is running, if url is visible = True
-            fixture = Application(browser=browser, base_url=base_url, login=login, password=password)
-    fixture.session.ensure_login(login=login, password=password)  # check for login logic
+    if target is None:
+        with open(request.config.getoption("--target")) as config_file:
+            target = json.load(config_file)
+    if fixture is None or not fixture.is_valid():
+        fixture = Application(browser=browser, base_url=target['baseUrl'], login=target['login'],
+                              password=target['password'])
+    fixture.session.ensure_login(login=target['login'], password=target['password'])  # check for login logic
     return fixture
 
 
@@ -30,6 +31,4 @@ def stop(request):
 
 def pytest_addoption(parser):
     parser.addoption("--browser", action="store", default="firefox")
-    parser.addoption("--baseUrl", action="store", default="http://localhost:8080/addressbook/index.php")
-    parser.addoption("--login", action="store", default="")
-    parser.addoption("--password", action="store", default="")
+    parser.addoption("--target", action="store", default="target.json")
