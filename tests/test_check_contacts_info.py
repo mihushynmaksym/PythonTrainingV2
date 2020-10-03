@@ -1,8 +1,7 @@
 from model.contact import Contact
-from random import randrange
 
 
-def test_modify_contact(app):
+def test_modify_contact(app, db):
     contact_value = Contact(firstname='firstname',
                             middlename='midlename',
                             lastname='lastname',
@@ -23,17 +22,15 @@ def test_modify_contact(app):
                             adress2='adress2',
                             phone2='phone2',
                             notes='notes')
-    if app.contact.count() == 0:  # precondition rule for test
+    if len(db.get_contact_list()) == 0:  # precondition rule for test
         app.contact.create(contact_value)
-    contact_list = app.contact.get_contact_list()
-    index = randrange(len(contact_list))
-    contact_from_home_page = contact_list[index]
-    contact_from_edit_page = app.contact.get_contact_info_from_edit_page(index)
+    contact_ui = sorted(app.contact.get_contact_list(), key=Contact.id_or_max)
+    contact_db = sorted(db.get_contact_list(), key=Contact.id_or_max)
     all_phones = app.contact.merge_phones_like_on_home_page
     all_emails = app.contact.merge_email_like_on_home_page
-    assert contact_from_home_page.firstname == contact_from_edit_page.firstname
-    assert contact_from_home_page.lastname == contact_from_edit_page.lastname
-    assert contact_from_home_page.address == contact_from_edit_page.address
-    assert contact_from_home_page.all_emails_from_home_page == all_emails(contact_from_edit_page)
-    assert contact_from_home_page.all_phones_from_home_page == all_phones(contact_from_edit_page)
-
+    for i in range(len(contact_ui)):
+        assert contact_ui[i].firstname == contact_db[i].firstname
+        assert contact_ui[i].lastname == contact_db[i].lastname
+        assert contact_ui[i].address == contact_db[i].address
+        assert contact_ui[i].all_emails_from_home_page == all_emails(contact_db[i])
+        assert contact_ui[i].all_phones_from_home_page == all_phones(contact_db[i])

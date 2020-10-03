@@ -88,7 +88,7 @@ class ORMFixture:
                            byear=contact.byear,
                            ayear=contact.ayear,
                            adress2=contact.adress2,
-                           phone2=contact.adress2,
+                           phone2=contact.phone2,
                            notes=contact.notes)
         return list(map(convert, contacts))
 
