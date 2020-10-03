@@ -52,6 +52,16 @@ class GroupHelper:
         self.return_to_home_page(wd)
         self.group_cache = None  # option Cash = None
 
+    def modify_group_by_id(self, id, group):
+        wd = self.app.wd
+        self.groups_page(wd)
+        self.select_group_by_id(id)
+        wd.find_element_by_xpath("//*[@value='Edit group']").click()
+        self.fill_group(group, wd)
+        wd.find_element_by_xpath("//*[@name='update']").click()
+        self.return_to_home_page(wd)
+        self.group_cache = None  # option Cash = None
+
     def delete_first_group(self):
         self.delete_group_by_index(0)
 
@@ -63,11 +73,25 @@ class GroupHelper:
         self.groups_page(wd)
         wd.find_elements_by_xpath("//*[@name='selected[]']")[index].click()
 
+    def select_group_by_id(self, id):
+        wd = self.app.wd
+        self.groups_page(wd)
+        wd.find_element_by_css_selector("input[value='{0}'".format(id)).click()
+
     def delete_group_by_index(self, index):
         # take first group value and delete
         wd = self.app.wd
         self.groups_page(wd)
         self.select_group_by_index(index)
+        wd.find_element_by_xpath("//*[@value='Delete group(s)']").click()
+        self.return_to_home_page(wd)
+        self.group_cache = None  # option Cash = None
+
+    def delete_group_by_id(self, id):
+        # take first group value and delete
+        wd = self.app.wd
+        self.groups_page(wd)
+        self.select_group_by_id(id)
         wd.find_element_by_xpath("//*[@value='Delete group(s)']").click()
         self.return_to_home_page(wd)
         self.group_cache = None  # option Cash = None

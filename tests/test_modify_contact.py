@@ -1,35 +1,32 @@
 from model.contact import Contact
-from random import randrange
+import random
 
 
-def test_modify_contact(app):
-    contact_value = Contact(firstname='firstname',
-                            middlename='midlename',
-                            lastname='lastname',
-                            nickname='nickname',
-                            title='title',
-                            company='company',
-                            address='adress',
-                            home='home',
-                            mobile='mobile',
-                            work='work',
-                            fax='fax',
-                            email='email',
-                            email2='email2',
-                            email3='email3',
-                            homepage='homepage',
-                            byear='byear',
-                            ayear='ayear',
-                            adress2='adress2',
-                            phone2='phone2',
-                            notes='notes')
-    if app.contact.count() == 0:  # precondition rule for test
-        app.contact.create(contact_value)
-    old_contact = app.contact.get_contact_list()
-    index = randrange(len(old_contact))
-    contact_value.id = old_contact[index].id
-    app.contact.modify_by_index(index, contact_value)
-    new_contact = app.contact.get_contact_list()
-    assert len(old_contact) == len(new_contact)
-    old_contact[index] = contact_value
-    assert sorted(old_contact, key=Contact.id_or_max) == sorted(new_contact, key=Contact.id_or_max)
+def test_modify_contact(app, db):
+    contact = Contact(firstname='firstname1',
+                      middlename='midlename2',
+                      lastname='lastname3',
+                      nickname='nickname4',
+                      title='title5',
+                      company='company6',
+                      address='adress7',
+                      home='home8',
+                      mobile='mobile9',
+                      work='work10',
+                      fax='fax11',
+                      email='email12',
+                      email2='email213',
+                      email3='email314',
+                      homepage='homepage15',
+                      byear='1988',
+                      ayear='2020',
+                      adress2='adress218',
+                      phone2='phone219',
+                      notes='notes20')
+    if len(db.get_contact_list()) == 0:  # precondition rule for test
+        app.contact.create(contact)
+    old_contacts = db.get_contact_list()
+    contacts = random.choice(old_contacts)
+    app.contact.modify_contact_by_id(contacts.id, contact)
+    new_contacts = db.get_contact_list()
+    assert sorted(old_contacts, key=Contact.id_or_max) == sorted(new_contacts, key=Contact.id_or_max)
