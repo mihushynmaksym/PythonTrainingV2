@@ -1,5 +1,6 @@
 import re
 from model.contact import Contact
+import time
 
 
 class ContactHelper:
@@ -87,8 +88,8 @@ class ContactHelper:
         self.return_to_home_page(wd)
         self.select_contact_for_edit_by_id(id)
         self.fill_contact_form(contact, wd)
-        wd.find_element_by_xpath("//input[@value='Update']").click()
-        wd.find_element_by_css_selector("div#content a").click()
+        wd.find_element_by_xpath("//*[@id='content']/form[1]/input[22]").click()
+        self.group_cache = None
 
     def select_contact_by_id(self, id):
         wd = self.app.wd
@@ -155,6 +156,21 @@ class ContactHelper:
                                                   all_emails_from_home_page=all_emails,
                                                   all_phones_from_home_page=all_phones))
         return list(self.contact_cache)
+
+    def add_contact_in_group(self, contact_id, group_id):
+        wd = self.app.wd
+        self.return_to_home_page(wd)
+        self.select_contact_by_id(contact_id)
+        wd.find_element_by_xpath("//*[@name='to_group']").send_keys("input[value='{0}'".format(group_id))
+        wd.find_element_by_xpath("//*[@type='submit']").click()
+        self.return_to_home_page(wd)
+
+    def dell_contact_in_group(self, contact_id, group_id):
+        wd = self.app.wd
+        wd.get("http://localhost/addressbook/index.php?group={0}".format(group_id))
+        wd.find_element_by_xpath("//*[@id='content']/form[2]/div[3]/input")
+        self.select_contact_by_id(contact_id)
+        wd.find_element_by_xpath("//*[@id='content']/form[2]/div[3]/input").click()
 
     def get_contact_info_from_edit_page(self, index):
         wd = self.app.wd

@@ -28,10 +28,7 @@ def random_string_for_group(prefix, maxlen):
     return prefix + "".join([random.choice(symbols) for i in range(random.randrange(maxlen))])
 
 
-test_data = [Contact(firstname="", middlename="", lastname="", nickname="", title="", company="", address="",
-                     home="", mobile="", work="", fax="", email="", email2="", email3="", homepage="", byear="",
-                     ayear="", adress2="", phone2="", notes="")] + \
-            [Contact(
+test_data = [Contact(
              firstname=random_string_for_group("firstname", 10),
              middlename=random_string_for_group("middlename", 10),
              lastname=random_string_for_group("lastname", 10),

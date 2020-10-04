@@ -3,7 +3,7 @@ import random
 
 
 def test_modify_contact(app, db):
-    contact = Contact(firstname='firstname1',
+    contact_value = Contact(firstname='firstname1',
                       middlename='midlename2',
                       lastname='lastname3',
                       nickname='nickname4',
@@ -24,9 +24,9 @@ def test_modify_contact(app, db):
                       phone2='phone219',
                       notes='notes20')
     if len(db.get_contact_list()) == 0:  # precondition rule for test
-        app.contact.create(contact)
+        app.contact.create(contact_value)
     old_contacts = db.get_contact_list()
     contacts = random.choice(old_contacts)
-    app.contact.modify_contact_by_id(contacts.id, contact)
+    app.contact.modify_contact_by_id(contacts.id, contact_value)
     new_contacts = db.get_contact_list()
     assert sorted(old_contacts, key=Contact.id_or_max) == sorted(new_contacts, key=Contact.id_or_max)
