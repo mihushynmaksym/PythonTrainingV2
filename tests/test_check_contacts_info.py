@@ -26,11 +26,9 @@ def test_modify_contact(app, db):
         app.contact.create(contact_value)
     contact_ui = sorted(app.contact.get_contact_list(), key=Contact.id_or_max)
     contact_db = sorted(db.get_contact_list(), key=Contact.id_or_max)
-    all_phones = app.contact.merge_phones_like_on_home_page
-    all_emails = app.contact.merge_email_like_on_home_page
     for i in range(len(contact_ui)):
         assert contact_ui[i].firstname == contact_db[i].firstname
         assert contact_ui[i].lastname == contact_db[i].lastname
         assert contact_ui[i].address == contact_db[i].address
-        assert contact_ui[i].all_emails_from_home_page == all_emails(contact_db[i])
-        assert contact_ui[i].all_phones_from_home_page == all_phones(contact_db[i])
+        assert contact_ui[i].all_emails_from_home_page == app.contact.merge_email_like_on_home_page(contact_db[i])
+        assert contact_ui[i].all_phones_from_home_page == app.contact.merge_phones_like_on_home_page(contact_db[i])
