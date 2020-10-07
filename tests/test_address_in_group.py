@@ -33,8 +33,9 @@ def test_add_contact_in_group(app, db):
     group_list = db.get_group_list()
     contact = random.choice(contact_list)
     group = random.choice(group_list)
-    app.contact.add_contact_in_group(contact.id, group)
-    assert contact in db.get_contacts_in_group(Group(id='{0}'.format(group)))
+    if contact in db.get_contacts_not_in_group(Group(id='{0}'.format(group.id))):
+        app.contact.add_contact_in_group(contact.id, group.id)
+    assert contact in db.get_contacts_in_group(Group(id='{0}'.format(group.id)))
 
 
 def test_dell_contact_in_group(app, db):
@@ -59,13 +60,15 @@ def test_dell_contact_in_group(app, db):
                             phone2='phone219',
                             notes='notes20')
     group_value = Group(name='param1', header='param2', footer='param3')
-    contact = random.choice(db.get_contact_list())
-    group = random.choice(db.get_group_list())
+    contact_list = db.get_contact_list()
+    group_list = db.get_group_list()
+    contact = random.choice(contact_list)
+    group = random.choice(group_list)
     if len(db.get_group_list()) == 0:  # precondition rule for test
         app.group.create(group_value)
-    if len(db.get_contact_list()) == 0:
+    elif len(db.get_contact_list()) == 0:
         app.contact.create(contact_value)
-    if contact not in db.get_contacts_in_group(Group(id='{0}'.format(group.id))):
+    elif contact not in db.get_contacts_in_group(Group(id='{0}'.format(group.id))):
         app.contact.add_contact_in_group(contact.id, group.id)
     app.contact.dell_contact_in_group(contact.id, group.id)
     assert contact in db.get_contacts_not_in_group(Group(id='{0}'.format(group.id)))

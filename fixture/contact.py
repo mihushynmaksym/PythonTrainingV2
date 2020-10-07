@@ -161,7 +161,7 @@ class ContactHelper:
         wd = self.app.wd
         self.return_to_home_page(wd)
         self.select_contact_by_id(contact_id)
-        wd.find_element_by_xpath("//*[@name='to_group']").send_keys("input[value='{0}'".format(group_id))
+        wd.find_element_by_xpath("//*[@name='to_group']/option[@value='{0}']".format(group_id)).click()
         wd.find_element_by_xpath("//*[@type='submit']").click()
         self.return_to_home_page(wd)
 
