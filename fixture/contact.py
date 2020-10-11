@@ -167,6 +167,7 @@ class ContactHelper:
 
     def dell_contact_in_group(self, contact_id, group_id):
         wd = self.app.wd
+        self.return_to_home_page(wd)
         wd.get("http://localhost/addressbook/index.php?group={0}".format(group_id))
         wd.find_element_by_xpath("//*[@id='content']/form[2]/div[3]/input")
         self.select_contact_by_id(contact_id)

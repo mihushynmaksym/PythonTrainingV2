@@ -27,15 +27,17 @@ def test_add_contact_in_group(app, db):
     group_value = Group(name='param1', header='param2', footer='param3')
     if len(db.get_group_list()) == 0:  # precondition rule for test
         app.group.create(group_value)
-    elif len(db.get_contact_list()) == 0:
+    if len(db.get_contact_list()) == 0:
         app.contact.create(contact_value)
-    contact_list = db.get_contact_list()
-    group_list = db.get_group_list()
-    contact = random.choice(contact_list)
-    group = random.choice(group_list)
-    if contact in db.get_contacts_not_in_group(Group(id='{0}'.format(group.id))):
-        app.contact.add_contact_in_group(contact.id, group.id)
-    assert contact in db.get_contacts_in_group(Group(id='{0}'.format(group.id)))
+    while True:
+        group = random.choice(db.get_group_list())
+        contact = random.choice(db.get_contact_list())
+        if contact in db.get_contacts_in_group(Group(id='{0}'.format(group.id))):
+            continue
+        else:
+            app.contact.add_contact_in_group(contact.id, group.id)
+            assert contact in db.get_contacts_in_group(Group(id='{0}'.format(group.id)))
+            break
 
 
 def test_dell_contact_in_group(app, db):
@@ -60,15 +62,17 @@ def test_dell_contact_in_group(app, db):
                             phone2='phone219',
                             notes='notes20')
     group_value = Group(name='param1', header='param2', footer='param3')
-    contact_list = db.get_contact_list()
-    group_list = db.get_group_list()
-    contact = random.choice(contact_list)
-    group = random.choice(group_list)
     if len(db.get_group_list()) == 0:  # precondition rule for test
         app.group.create(group_value)
-    elif len(db.get_contact_list()) == 0:
+    if len(db.get_contact_list()) == 0:
         app.contact.create(contact_value)
-    elif contact not in db.get_contacts_in_group(Group(id='{0}'.format(group.id))):
-        app.contact.add_contact_in_group(contact.id, group.id)
-    app.contact.dell_contact_in_group(contact.id, group.id)
-    assert contact in db.get_contacts_not_in_group(Group(id='{0}'.format(group.id)))
+    group = random.choice(db.get_group_list())
+    contact = random.choice(db.get_contact_list())
+    while True:
+        if contact not in db.get_contacts_in_group(Group(id='{0}'.format(group.id))):
+            app.contact.add_contact_in_group(contact.id, group.id)
+            continue
+        else:
+            app.contact.dell_contact_in_group(contact.id, group.id)
+            assert contact in db.get_contacts_not_in_group(Group(id='{0}'.format(group.id)))
+            break
