@@ -3,3 +3,4 @@ selenium
 pony
 suds-jurko
 jsonpickle
+pymysql
