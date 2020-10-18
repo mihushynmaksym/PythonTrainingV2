@@ -68,10 +68,8 @@ def test_dell_contact_in_group(app, db):
                             phone2='phone219',
                             notes='notes20')
     group_value = Group(name='param1', header='param2', footer='param3')
-    if len(db.get_group_list()) == 0:  # precondition rule for test
-        app.group.create(group_value)
-    if len(db.get_contact_list()) == 0:
-        app.contact.create(contact_value)
+    app.contact.create(contact_value)
+    app.group.create(group_value)
     new_contact = db.get_contact_list()[-1]
     new_group = db.get_group_list()[-1]
     app.contact.add_contact_in_group(new_contact.id, new_group.id)
