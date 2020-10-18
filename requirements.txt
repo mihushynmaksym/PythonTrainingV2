@@ -4,3 +4,4 @@ pony
 suds-jurko
 jsonpickle
 pymysql
+allure-pytest
