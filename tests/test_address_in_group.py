@@ -29,21 +29,18 @@ def test_add_contact_in_group(app, db):
         app.group.create(group_value)
     if len(db.get_contact_list()) == 0:
         app.contact.create(contact_value)
-    while True:
-        group = random.choice(db.get_group_list())
-        contact = random.choice(db.get_contact_list())
-        if contact in db.get_contacts_in_group(Group(id='{0}'.format(group.id))):
-            app.contact.create(contact_value)
-            app.group.create(group_value)
-            new_contact = db.get_contact_list()[-1]
-            new_group = db.get_group_list()[-1]
-            app.contact.add_contact_in_group(new_contact.id, new_group.id)
-            assert new_contact in db.get_contacts_in_group(Group(id='{0}'.format(new_group.id)))
-            break
-        else:
-            app.contact.add_contact_in_group(contact.id, group.id)
-            assert contact in db.get_contacts_in_group(Group(id='{0}'.format(group.id)))
-            break
+    group = random.choice(db.get_group_list())
+    contact = random.choice(db.get_contact_list())
+    if contact in db.get_contacts_in_group(Group(id='{0}'.format(group.id))):
+        app.contact.create(contact_value)
+        app.group.create(group_value)
+        new_contact = db.get_contact_list()[-1]
+        new_group = db.get_group_list()[-1]
+        app.contact.add_contact_in_group(new_contact.id, new_group.id)
+        assert new_contact in db.get_contacts_in_group(Group(id='{0}'.format(new_group.id)))
+    else:
+        app.contact.add_contact_in_group(contact.id, group.id)
+        assert contact in db.get_contacts_in_group(Group(id='{0}'.format(group.id)))
 
 
 def test_dell_contact_in_group(app, db):
